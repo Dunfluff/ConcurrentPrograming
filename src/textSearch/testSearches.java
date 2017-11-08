@@ -9,17 +9,17 @@ import edu.princeton.cs.algs4.KMP;
 import edu.princeton.cs.algs4.RabinKarp;
 
 public class testSearches {
-	public static String[] readToArray(String fileName) throws IOException{
+	public static String read(String fileName) throws IOException{
 		BufferedReader r = new BufferedReader(new InputStreamReader(new FileInputStream("data/" + fileName)));
-		ArrayList<String> list= new ArrayList<String>();
+		StringBuilder sb = new StringBuilder();
 		while (true) {
 			String word = r.readLine();
 			if (word == null) {
 				break;
 			}
-			list.add(word);
+			sb.append(word);
 		}
-		return list.toArray(new String[list.size()]);
+		return sb.toString();
 	}
 		
 	
@@ -28,28 +28,28 @@ public class testSearches {
 
 			
 			//Read Words
-			String[] s = readToArray("bible-en.txt");
-			String[] pattern = readToArray("pattern1.txt");
+			String s = read("bible-en.txt");
+			String pattern = read("pattern1.txt");
 			
-			
-			//Rabin Bible
+			//Naive Bible
 			long before = System.currentTimeMillis();
-			RabinKarp rk = new RabinKarp(pattern.toString());
-			System.out.println(rk.search(s.toString()));
+	        naiveSearch ns = new naiveSearch();
+			ns.Search(s, pattern);
 			long after = System.currentTimeMillis();
-			System.out.println("TimeReadWords: " + (after-before) / 1000.0 + " seconds");
+			System.out.println((after-before) / 1000.0);
+			//Rabin Bible
+			before = System.currentTimeMillis();
+			RabinKarp rk = new RabinKarp(pattern);
+			rk.search(s);
+			after = System.currentTimeMillis();
+			System.out.println((after-before) / 1000.0);
 			//KMP Bible
 			before = System.currentTimeMillis();
-			KMP kmp = new KMP(pattern.toString());
-			System.out.println(kmp.search(s.toString()));
+			KMP kmp = new KMP(pattern);
+			kmp.search(s);
 			after = System.currentTimeMillis();
-			System.out.println("TimeReadWords: " + (after-before) / 1000.0 + " seconds");
-			//Naive Bible
-	        before = System.currentTimeMillis();
-	        naiveSearch ns = new naiveSearch();
-			System.out.println(ns.Search(s.toString(), pattern.toString()));
-			after = System.currentTimeMillis();
-			System.out.println("TimeReadWords: " + (after-before) / 1000.0 + " seconds");
+			System.out.println((after-before) / 1000.0);
+
 
 	}
 
