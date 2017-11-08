@@ -18,7 +18,7 @@ public class TestSearches {
 		r.close();
 	}
 	
-	private static String readToArray(String fileName) throws IOException{
+	private static String readToString(String fileName) throws IOException{
 		BufferedReader r = new BufferedReader(new InputStreamReader(new FileInputStream("data/" + fileName)));
 		StringBuilder sb = new StringBuilder();
 		while (true) {
@@ -32,27 +32,30 @@ public class TestSearches {
 		return sb.toString();
 	}
 	
-	private static StringBuilder generateAaaString() {
+	private static StringBuilder generateAaaString(int length, char c, char lastChar) {
 		StringBuilder sb = new StringBuilder();
-		String character = "a";
-		for (int i = 0; i < 1000000; i++) {
-			sb.append(character);
+		for (int i = 0; i < length-1; i++) {
+			sb.append(c);
 		}
-
+		sb.append(lastChar);
 		return sb;
 	}
 		
 	
 	public static void main(String[] args) throws Exception {
 		
-		// Read Bible Test Files
-		String text = readToArray("aaa.txt");
-		String pattern = readToArray("aaa-pattern.txt");
+		writeToFile(generateAaaString(4077773, 'a', 'a').toString(), "aaa.txt");
+		writeToFile(generateAaaString(4078, 'a', 'b').toString(), "aaa-pattern.txt");
+//		
+//		// Read aaa Test File
+		String text = readToString("aaa.txt");
+		String pattern = readToString("aaa-pattern.txt");
 		
 		
-		// Read Bible Test Files
-//		String text = readToArray("bible-en.txt");
-//		String pattern = readToArray("bible-pattern.txt");
+		// Read Bible Test File
+//		String text = readToString("bible-en.txt");
+//		String pattern = readToString("bible-pattern.txt");
+//		String pattern = new StringBuilder(text.substring(0, 4078)).append('b').toString();
 			
 		// Rabin Search
 		long before = System.currentTimeMillis();
@@ -70,8 +73,8 @@ public class TestSearches {
 
 		// Naive Search
 		before = System.currentTimeMillis();
-//		System.out.println("Naive-Search pos: " + StringSearch.naiveSearch(text, pattern));
-		System.out.println("Naive-Search pos: " + StringSearch.naiveSearch(text.toCharArray(), pattern.toCharArray()));
+		System.out.println("Naive-Search pos: " + StringSearch.naiveSearch(text, pattern));
+//		System.out.println("Naive-Search pos: " + StringSearch.naiveSearch(text.toCharArray(), pattern.toCharArray()));
 		after = System.currentTimeMillis();
 		System.out.println("Naive-Search time: " + (after - before) / 1000.0 + " seconds\n");
 
