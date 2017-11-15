@@ -1,15 +1,25 @@
 package textSearch;
 
 import java.io.BufferedReader;
+import java.io.BufferedWriter;
 import java.io.FileInputStream;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStreamReader;
-import java.util.ArrayList;
+import java.io.OutputStreamWriter;
+
 import edu.princeton.cs.algs4.KMP;
 import edu.princeton.cs.algs4.RabinKarp;
 
-public class testSearches {
-	public static String read(String fileName) throws IOException{
+public class TestSearches {
+
+	private static void writeToFile(String s, String fileName) throws IOException {
+		BufferedWriter r = new BufferedWriter(new OutputStreamWriter(new FileOutputStream("data/" + fileName)));
+		r.write(s);
+		r.close();
+	}
+
+	private static String readToString(String fileName) throws IOException {
 		BufferedReader r = new BufferedReader(new InputStreamReader(new FileInputStream("data/" + fileName)));
 		StringBuilder sb = new StringBuilder();
 		while (true) {
@@ -19,36 +29,63 @@ public class testSearches {
 			}
 			sb.append(word);
 		}
+		r.close();
 		return sb.toString();
 	}
-		
-	
-	public static void main(String[] args) throws Exception {
-			
 
-			
-			//Read Words
-			String s = read("bible-en.txt");
-			String pattern = read("pattern1.txt");
-			
-			//Naive Bible
-			long before = System.currentTimeMillis();
-	        naiveSearch ns = new naiveSearch();
-			ns.Search(s, pattern);
-			long after = System.currentTimeMillis();
-			System.out.println((after-before) / 1000.0);
-			//Rabin Bible
-			before = System.currentTimeMillis();
-			RabinKarp rk = new RabinKarp(pattern);
-			rk.search(s);
-			after = System.currentTimeMillis();
-			System.out.println((after-before) / 1000.0);
-			//KMP Bible
-			before = System.currentTimeMillis();
-			KMP kmp = new KMP(pattern);
-			kmp.search(s);
-			after = System.currentTimeMillis();
-			System.out.println((after-before) / 1000.0);
+	private static StringBuilder generateAaaString(int length, char c, char lastChar) {
+		StringBuilder sb = new StringBuilder();
+		for (int i = 0; i < length - 1; i++) {
+			sb.append(c);
+		}
+		sb.append(lastChar);
+		return sb;
+
+	}
+
+	public static void main(String[] args) throws Exception {
+		StringSearch searcher = new StringSearch();
+//		writeToFile(generateAaaString(4077773, 'a', 'a').toString(), "aaa.txt");
+//		writeToFile(generateAaaString(4078, 'a', 'b').toString(), "aaa-pattern.txt");
+		//
+//		// // Read aaa Test File
+//		String text = readToString("aaa.txt");
+//		String pattern = readToString("aaa-pattern.txt");
+
+//		 Read Bible Test File
+//		 String text = readToString("bible-en.txt");
+//		 String pattern = new StringBuilder(text.substring(0, 4078)).append('b').toString();
+		 
+//		 Read Bible Test File for hits
+		 String text = readToString("bible-en.txt");
+		 String pattern = new StringBuilder(text.substring(10000, 104078)).toString();
+
+		// Rabin Search
+		long before = System.currentTimeMillis();
+		RabinKarp rk = new RabinKarp(pattern);
+		System.out.println("Rabin-Karp pos: " + rk.search(text));
+		long after = System.currentTimeMillis();
+		System.out.println("Rabin-Karp time: " + (after - before) / 1000.0 + " seconds\n");
+
+		// KMP Search
+		before = System.currentTimeMillis();
+		KMP kmp = new KMP(pattern);
+		System.out.println("Knuth-Morris-Pratt pos: " + kmp.search(text));
+		after = System.currentTimeMillis();
+		System.out.println("Knuth-Morris-Pratt time: " + (after - before) / 1000.0 + " seconds\n");
+
+
+		// Rabin-Karp static prime Search
+		before = System.currentTimeMillis();
+		System.out.println("Rabin-Karp static prime pos: " + searcher.rk(text, pattern));
+		after = System.currentTimeMillis();
+		System.out.println("Rabin-Karp static prime time: " + (after - before) / 1000.0 + " seconds\n");
+		
+		// Naive Search
+		before = System.currentTimeMillis();
+		System.out.println("Naive-Search pos: " + searcher.naiveSearch(text, pattern));
+		after = System.currentTimeMillis();
+		System.out.println("Naive-Search time: " + (after - before) / 1000.0 + " seconds\n");
 
 
 	}
