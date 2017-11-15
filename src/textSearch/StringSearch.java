@@ -18,6 +18,7 @@ public class StringSearch {
 			if (j == pattern.length)
 				return i;
 		}
+		System.out.println("Comparisons: " + comparisons);
 		return text.length;
 	}
 
@@ -30,8 +31,10 @@ public class StringSearch {
 				if (text.charAt(i + j) != pattern.charAt(j))
 					break;
 			}
-			if (j == pattern.length())
+			if (j == pattern.length()){
+				System.out.println("Comparisons: " + comparisons);
 				return i;
+			}
 		}
 		System.out.println("Comparisons: " + comparisons);
 		return -1;
